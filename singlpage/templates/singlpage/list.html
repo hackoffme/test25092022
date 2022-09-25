@@ -1,0 +1,55 @@
+{% extends 'singlpage/base.html' %}
+{% block table %}
+  {% if  order_list %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Заказ №</th>
+          <th scope="col">Цена USD</th>
+          <th scope="col">Цена RUB</th>
+          <th scope="col">Дата исполнения</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order_list %}
+          <tr>
+            <th scope="row">{{ item.number }}</th>
+            <td>{{ item.price }}</td>
+            <td>{{ item.price_rub }}</td>
+            <td>{{ item.delivery_time }}</td>
+          </tr>
+        {% endfor %}
+      {% endif %}
+    </tbody>
+  </table>
+{% endblock %}
+{% block total %}
+  <div>
+    <div class='text-white bg-dark text-center'>TOTAL</div>
+    <div class='text-center display-4'>{{ total }}</div>
+  </div>
+{% endblock %}
+{% block plot %}
+  <div class='text-white bg-dark text-center'>−• ••−   −•− −−− −− ••−   −• ••− •••− −• •−   •−− −−− •−−− −• •− ••−−••  </div>
+  {% load googlecharts %}
+  {# container #}
+  <div id="out"></div>
+  {% googlecharts %}
+  {# named data and options can be reused #}
+  {% data values "out_data" %}
+  {% col "string" "Name" %}"{{ val }}"{% endcol %}
+  {% col "number" "Value" %}{{ val }}{% endcol %}
+{% enddata %}
+{# you can also use global javascript variables here, #}
+{# and call functions #}
+{% options "out_options" %}
+kind: "LineChart",
+options: {
+width: 600,
+height: 400
+}
+{% endoptions %}
+{# chart is assembled from container, data and options #}
+{% graph "out" "out_data" "out_options" %}
+{% endgooglecharts %}
+{% endblock %}

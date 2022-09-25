@@ -1,0 +1,8 @@
+Django
+gspread
+django_crontab 
+xmltodict
+django-google-charts
+python-dateutil
+django-qsstats-magic
+psycopg2

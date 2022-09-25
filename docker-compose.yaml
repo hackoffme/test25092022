@@ -1,0 +1,34 @@
+version: '3'
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: ./docker/django/Dockerfile
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py crontab add &&
+             service cron start &&
+             python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/home/user/app
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=data
+      - POSTGRES_USER=flatr
+      - POSTGRES_PASSWORD=flatr
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U flatr -d data"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
